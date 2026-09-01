@@ -4,6 +4,21 @@
 #include "GameFramework/GameStateBase.h"
 #include "SpartaGameState.generated.h"
 
+USTRUCT(BlueprintType)
+struct FWaveData
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Wave")
+	float Duration = 30.0f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Wave")
+	int32 ItemCount= 10;
+
+
+};
+
+
 UCLASS()
 class SPARTAPROJECT_API ASpartaGameState : public AGameStateBase
 {
@@ -32,7 +47,13 @@ public:
 
 	UPROPERTY(EditAnyWhere, BlueprintReadOnly, Category = "Level")
 	TArray<FName> LevelMapNames;
-	FTimerHandle LevelTimerHandle;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Wave")
+	TArray<FWaveData> WaveDataList;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category ="Wave")
+	int32 CurrentWaveIndex;
+
+
+	FTimerHandle WaveTimerHandle;
 	FTimerHandle HUDUpdateTimerHandle;
 
 	UFUNCTION(BlueprintPure, Category = "Score")
@@ -43,7 +64,8 @@ public:
 	void OnGameOver();
 
 	void StartLevel();
-	void OnLevelTimeUp();
+	void StartWave();
+	void OnWaveTimeup();
 	void OnCoinCollected();
 	void EndLevel();
 	void UpdateHUD();
