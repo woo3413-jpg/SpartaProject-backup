@@ -34,6 +34,9 @@ ASpartaCharacter::ASpartaCharacter()
 
 	MaxHealth = 100.0f;
 	Health = MaxHealth;
+	SlowMultiplier = 1.0f;
+	SlowStack = 0;
+	ReverseStack = 0;
 }
 
 void ASpartaCharacter::BeginPlay()
@@ -113,7 +116,11 @@ void ASpartaCharacter::Move(const FInputActionValue & value)
 {
 	if (!Controller) return;
 
-	const FVector2D MoveInput = value.Get<FVector2D>();
+	FVector2D MoveInput = value.Get<FVector2D>();
+	if (bReverseControl)
+	{
+		MoveInput *= -1.0f;
+	}
 
 	if (!FMath::IsNearlyZero(MoveInput.X))
 	{
@@ -150,14 +157,14 @@ void ASpartaCharacter::StartSprint(const FInputActionValue& value)
 {
 	if (GetCharacterMovement())
 	{
-		GetCharacterMovement()->MaxWalkSpeed = SprintSpeed;
+		GetCharacterMovement()->MaxWalkSpeed = SprintSpeed * SlowMultiplier;
 	}
 }
 void ASpartaCharacter::StopSprint(const FInputActionValue& value)
 {
 	if (GetCharacterMovement())
 	{
-		GetCharacterMovement()->MaxWalkSpeed = NormalSpeed;
+		GetCharacterMovement()->MaxWalkSpeed = NormalSpeed * SlowMultiplier;
 	}
 }
 

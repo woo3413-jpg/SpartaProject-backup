@@ -17,19 +17,19 @@ ASpartaGameState::ASpartaGameState()
 	CurrentWaveIndex = 0;
 
 	FWaveData Wave1;
-	Wave1.Duration = 30.0f;
+	Wave1.Duration = 10.0f;
 	Wave1.ItemCount = 10;
 
 	WaveDataList.Add(Wave1);
 
 	FWaveData Wave2;
-	Wave2.Duration = 25.0f;
+	Wave2.Duration = 5.0f;
 	Wave2.ItemCount = 15;
 
 	WaveDataList.Add(Wave2);
 
 	FWaveData Wave3;
-	Wave3.Duration = 20.0f;
+	Wave3.Duration = 3.0f;
 	Wave3.ItemCount = 20;
 
 	WaveDataList.Add(Wave3);

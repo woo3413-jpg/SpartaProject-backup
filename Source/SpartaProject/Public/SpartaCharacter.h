@@ -33,12 +33,22 @@ public:
 	
 	UFUNCTION(BluePrintCallable, Category = " Health")
 	void AddHealth(float Amount);
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
+	float SlowMultiplier;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
+	int32 SlowStack;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Debuff")
+	bool bReverseControl = false;
+	int32 ReverseStack;
+	
 protected:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "health")
 	float MaxHealth;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "health")
 	float Health;
+
 
 	virtual void BeginPlay() override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;

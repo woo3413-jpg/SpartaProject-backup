@@ -1,5 +1,5 @@
 #include "SlowingItem.h"
-#include "GameFramework/Character.h"
+#include "SpartaCharacter.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "TimerManager.h"
 
@@ -12,36 +12,40 @@ void ASlowingItem::ActivateItem(AActor* Activator)
 {
 	Super::ActivateItem(Activator);
 
-	ACharacter* Character = Cast<ACharacter>(Activator);
+	ASpartaCharacter* Character = Cast<ASpartaCharacter>(Activator);
 
 	if (!Character)
 	{
 		return;
 	}
+	Character->SlowStack++;
+	Character->SlowMultiplier = FMath::Pow(0.5f, Character->SlowStack);
 
-	UCharacterMovementComponent* Movement = Character->GetCharacterMovement();
-
-	if (!Movement)
+	if (Character->GetCharacterMovement())
 	{
-		return;
+		Character->GetCharacterMovement()->MaxWalkSpeed *= 0.5f;
 	}
-
-	const float OriginalSpeed = Movement->MaxWalkSpeed;
-
-	Movement->MaxWalkSpeed = OriginalSpeed * SlowRate;
 
 	FTimerHandle SlowTimerHandle;
 
 	GetWorld()->GetTimerManager().SetTimer(
 		SlowTimerHandle,
-		[Movement, OriginalSpeed]()
+		[Character]()
 		{
-			if (IsValid(Movement))
+			if (IsValid(Character))
 			{
-				Movement->MaxWalkSpeed = OriginalSpeed;
+				Character->SlowStack--;
+				Character->SlowStack = FMath::Max(0, Character->SlowStack);
+				Character->SlowMultiplier = FMath::Pow(0.5f, Character->SlowStack);
+
+
+				if (Character->GetCharacterMovement())
+				{
+					Character->GetCharacterMovement()->MaxWalkSpeed *= 2.0f;
+				}
 			}
 		},
-		SlowDuration,
+		5.0f,
 		false
 	);
 
